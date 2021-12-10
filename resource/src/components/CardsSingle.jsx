@@ -6,7 +6,7 @@ import {
   Card,
   Grid,
 } from "@material-ui/core";
-
+import CountUp from "react-countup";
 // TODO makeStyles
 const useStyles = makeStyles({
   wrapper: (props) => {
@@ -34,7 +34,7 @@ function CardsSingle({ title, count, type }) {
             {title}
           </Typography>
           <Typography component="span" variant="body2" className={styles.count}>
-            {count}
+            <CountUp end={count || 0} duration={2} separator="," />
           </Typography>
         </CardContent>
       </Card>

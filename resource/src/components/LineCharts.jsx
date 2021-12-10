@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highchart from "highcharts";
+import moment from "moment";
+import { ButtonGroup, Button } from "@material-ui/core";
 const generateOptions = (data) => {
-  const categories = [];
+  const categories = data.map((item) => moment(item.Date).format("DD/MM/YYYY"));
   return {
     chart: {
       height: 500,
@@ -42,18 +44,61 @@ const generateOptions = (data) => {
     series: [
       {
         name: "Tổng Ca nhiễm",
-        // data: data.map((item) => item.Confirmed),
-        data: [1, 2, 3],
+        data: data.map((item) => item.Confirmed),
       },
     ],
   };
 };
 function LineCharts({ data }) {
   const [options, setOptions] = useState({});
+  const [filter, setFilter] = useState("all");
   useEffect(() => {
-    setOptions(generateOptions(data));
-  }, [data]);
-  return <HighchartsReact highcharts={Highchart} options={options} />;
+    let dataFilter = [];
+    switch (filter) {
+      case "all":
+        dataFilter = data;
+        break;
+      case "30":
+        dataFilter = data.slice(data.length - 30);
+        break;
+      case "7":
+        dataFilter = data.slice(data.length - 7);
+        break;
+      default:
+        dataFilter = data;
+        break;
+    }
+    setOptions(generateOptions(dataFilter));
+  }, [data, filter]);
+
+  return (
+    <>
+      <ButtonGroup
+        size="small"
+        style={{ display: "flex", justifyContent: "flex-end" }}
+      >
+        <Button
+          color={filter === "all" ? "secondary" : ""}
+          onClick={() => setFilter("all")}
+        >
+          Tất cả
+        </Button>
+        <Button
+          color={filter === "30" ? "secondary" : ""}
+          onClick={() => setFilter("30")}
+        >
+          30 Ngày
+        </Button>
+        <Button
+          color={filter === "7" ? "secondary" : ""}
+          onClick={() => setFilter("7")}
+        >
+          7 Ngày
+        </Button>
+      </ButtonGroup>
+      <HighchartsReact highcharts={Highchart} options={options} />
+    </>
+  );
 }
 
 export default LineCharts;
