@@ -3,6 +3,12 @@ import SelectCountries from "./components/SelectCountries.jsx";
 import Cards from "./components/Cards.jsx";
 import Charts from "./components/Charts.jsx";
 import { getCountries, getReportsbyCountries } from "./api/api";
+import { sortBy } from "lodash";
+import { Typography, Container } from "@material-ui/core";
+import "@fontsource/roboto";
+import "moment/locale/vi";
+import moment from "moment";
+moment.locale("vi");
 function App() {
   //TODO State
   const [countries, setCountries] = useState([]);
@@ -11,7 +17,9 @@ function App() {
 
   useEffect(() => {
     getCountries().then((result) => {
-      setCountries(result.data);
+      const data = sortBy(result.data, "Country");
+      setCountries(data);
+      setSelectCountries("vn");
     });
   }, []);
 
@@ -31,15 +39,19 @@ function App() {
     }
   }, [countries, selectCountries]);
   return (
-    <>
+    <Container>
+      <Typography variant="h3" component="h3">
+        Số liệu COVID-19
+      </Typography>
+      <p>{moment().format("LLL")}</p>
       <SelectCountries
         countries={countries}
         handleOnChange={handleOnChange}
         value={selectCountries}
       />
       <Cards reports={reports} />
-      <Charts />
-    </>
+      <Charts reports={reports} />
+    </Container>
   );
 }
 

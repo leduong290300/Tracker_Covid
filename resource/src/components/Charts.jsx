@@ -1,15 +1,12 @@
 import React from "react";
 import { Grid } from "@material-ui/core";
 import LineCharts from "./LineCharts.jsx";
-import MapCharts from "./MapCharts.jsx";
-function Charts() {
+
+function Charts({ reports }) {
   return (
-    <Grid container spacing={3}>
-      <Grid item sm={8} xs={12}>
-        <LineCharts />
-      </Grid>
-      <Grid item sm={4} xs={12}>
-        <MapCharts />
+    <Grid container spacing={5} style={{ marginTop: 10 }}>
+      <Grid item sm={12} xs={12}>
+        <LineCharts data={reports} />
       </Grid>
     </Grid>
   );
